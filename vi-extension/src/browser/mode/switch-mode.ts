@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2018 Red Hat, Inc.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2012-2018 Red Hat, Inc.
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which is available at http://www.eclipse.org/legal/epl-2.0.html
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Red Hat, Inc. - initial API and implementation
@@ -11,11 +12,12 @@
 
 import { injectable, inject } from "inversify";
 import { CommandContribution, CommandRegistry } from "@theia/core/lib/common/command";
-// import MonacoSelection = monaco.Selection;
 import { EditorManager } from "@theia/editor/lib/browser";
 import { ModeManager } from "./mode-manager";
 import { ModeType } from "./mode";
 import { MonacoEditor } from "@theia/monaco/lib/browser/monaco-editor";
+import { VisualLineModeCommands } from "./visual-mode";
+import { EditorCommands } from "../editor-comands";
 
 export namespace SwitchModeCommands {
     export const NORMAL_MODE = {
@@ -26,6 +28,11 @@ export namespace SwitchModeCommands {
     export const VISUAL_MODE = {
         id: 'vi.switch.to.visualMode',
         label: 'Switch to Visual Mode'
+    }
+
+    export const VISUAL_LINE_MODE = {
+        id: 'vi.switch.to.visualLineMode',
+        label: 'Switch to Visual Line Mode'
     }
 
     export const INSERT_MODE_CURSOR_BEFORE = {
@@ -59,15 +66,6 @@ export namespace SwitchModeCommands {
     }
 }
 
-export namespace EditorCommands {
-    export const MOVE_CURSOR_LEFT = 'cursorLeft';
-    export const MOVE_CURSOR_RIGHT = 'cursorRight';
-    export const MOVE_CURSOR_HOME = 'cursorHome';
-    export const MOVE_CURSOR_END = 'cursorEnd';
-    export const INSERT_LINE_ABOVE = 'editor.action.insertLineBefore';
-    export const INSERT_LINE_BELOW = 'editor.action.insertLineAfter';
-}
-
 @injectable()
 export class SwitchViModeCommandContribution implements CommandContribution {
 
@@ -77,52 +75,71 @@ export class SwitchViModeCommandContribution implements CommandContribution {
 
     registerCommands(registry: CommandRegistry): void {
         registry.registerCommand(SwitchModeCommands.NORMAL_MODE, {
-            execute: () => this.switchMode(EditorCommands.MOVE_CURSOR_LEFT, ModeType.Normal),
-            isEnabled: () => this.modeManager.currentMode.type !== ModeType.Normal
+            execute: () => {
+                this.executeEditorCommand(EditorCommands.MOVE_CURSOR_LEFT);
+                this.modeManager.setActiveMode(ModeType.Normal);
+            },
+            isEnabled: () => this.modeManager.isEnabled(ModeType.Normal)
         });
 
         registry.registerCommand(SwitchModeCommands.VISUAL_MODE, {
+            execute: () => this.modeManager.setActiveMode(ModeType.Visual),
+            isEnabled: () => this.modeManager.isEnabled(ModeType.Visual)
+        });
+
+        registry.registerCommand(SwitchModeCommands.VISUAL_LINE_MODE, {
             execute: () => {
-                this.switchMode(EditorCommands.MOVE_CURSOR_LEFT, ModeType.Visual);
-                this.setStartPosition();
+                this.modeManager.setActiveMode(ModeType.Visual_Line);
+                this.executeEditorCommand(VisualLineModeCommands.SELECT_LINE_HOME.id);
             },
-            isEnabled: () => this.modeManager.currentMode.type === ModeType.Normal
+            isEnabled: () => this.modeManager.isEnabled(ModeType.Visual_Line)
         });
 
         registry.registerCommand(SwitchModeCommands.INSERT_MODE_CURSOR_BEFORE, {
-            execute: () => this.modeManager.setCurrentMode(ModeType.Insert),
-            isEnabled: () => this.modeManager.currentMode.type !== ModeType.Insert
+            execute: () => this.modeManager.setActiveMode(ModeType.Insert),
+            isEnabled: () => this.modeManager.isEnabled(ModeType.Insert)
         });
 
         registry.registerCommand(SwitchModeCommands.INSERT_MODE_CURSOR_AFTER, {
-            execute: () => this.switchMode(EditorCommands.MOVE_CURSOR_RIGHT, ModeType.Insert),
-            isEnabled: () => this.modeManager.currentMode.type !== ModeType.Insert
+            execute: () => {
+                this.executeEditorCommand(EditorCommands.MOVE_CURSOR_RIGHT);
+                this.modeManager.setActiveMode(ModeType.Insert);
+            },
+
+            isEnabled: () => this.modeManager.isEnabled(ModeType.Insert)
         });
 
         registry.registerCommand(SwitchModeCommands.INSERT_MODE_CURSOR_HOME, {
-            execute: () => this.switchMode(EditorCommands.MOVE_CURSOR_HOME, ModeType.Insert),
-            isEnabled: () => this.modeManager.currentMode.type !== ModeType.Insert
+            execute: () => {
+                this.executeEditorCommand(EditorCommands.MOVE_CURSOR_HOME);
+                this.modeManager.setActiveMode(ModeType.Insert);
+            },
+            isEnabled: () => this.modeManager.isEnabled(ModeType.Insert)
         });
 
         registry.registerCommand(SwitchModeCommands.INSERT_MODE_CURSOR_END, {
-            execute: () => this.switchMode(EditorCommands.MOVE_CURSOR_END, ModeType.Insert),
-            isEnabled: () => this.modeManager.currentMode.type !== ModeType.Insert
+            execute: () => {
+                this.executeEditorCommand(EditorCommands.MOVE_CURSOR_END);
+                this.modeManager.setActiveMode(ModeType.Insert);
+            },
+            isEnabled: () => this.modeManager.isEnabled(ModeType.Insert)
         });
 
         registry.registerCommand(SwitchModeCommands.INSERT_MODE_NEW_LINE_BELOW, {
-            execute: () => this.switchMode(EditorCommands.INSERT_LINE_BELOW, ModeType.Insert),
-            isEnabled: () => this.modeManager.currentMode.type !== ModeType.Insert
+            execute: () => {
+                this.executeEditorCommand(EditorCommands.INSERT_LINE_BELOW);
+                this.modeManager.setActiveMode(ModeType.Insert);
+            },
+            isEnabled: () => this.modeManager.isEnabled(ModeType.Insert)
         });
 
         registry.registerCommand(SwitchModeCommands.INSERT_MODE_NEW_LINE_ABOVE, {
-            execute: () => this.switchMode(EditorCommands.INSERT_LINE_ABOVE, ModeType.Insert),
-            isEnabled: () => this.modeManager.currentMode.type !== ModeType.Insert
+            execute: () => {
+                this.executeEditorCommand(EditorCommands.INSERT_LINE_ABOVE);
+                this.modeManager.setActiveMode(ModeType.Insert);
+            },
+            isEnabled: () => this.modeManager.isEnabled(ModeType.Insert)
         });
-    }
-
-    private switchMode(commandId: string, modeType: ModeType) {
-        this.executeEditorCommand(commandId);
-        this.modeManager.setCurrentMode(modeType);
     }
 
     private executeEditorCommand(commandId: string) {
@@ -131,16 +148,5 @@ export class SwitchViModeCommandContribution implements CommandContribution {
             const monacoEditor = currentEditor.editor as MonacoEditor;
             monacoEditor.commandService.executeCommand(commandId);
         }
-    }
-
-    private setStartPosition() {
-        // console.log('!!!!!!! setStartPosition !!!!!!!!');
-        // const currentEditor = this.editorManager.currentEditor!;
-        // if (currentEditor.editor instanceof MonacoEditor) {
-        //     const monacoEditor = currentEditor.editor as MonacoEditor;
-        //     console.log('!!!!!!! set fff selection !!!!!!!!');
-        //     monacoEditor.getControl().setSelection(MonacoSelection.createWithDirection(5, 10, 20, 7, monaco.SelectionDirection.LTR));
-        //     // monacoEditor.getControl().setSelection({startLineNumber: 5, startColumn: 10, endColumn: 20, endLineNumber: 7});
-        // }
     }
 }

@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2018 Red Hat, Inc.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *   Red Hat, Inc. - initial API and implementation
- */
+* Copyright (c) 2012-2018 Red Hat, Inc.
+* This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v2.0
+* which is available at http://www.eclipse.org/legal/epl-2.0.html
+*
+* SPDX-License-Identifier: EPL-2.0
+*
+* Contributors:
+*   Red Hat, Inc. - initial API and implementation
+*/
 
-// import { KeybindingContext, Keybinding } from "@theia/core/lib/browser";
 import { injectable, inject } from "inversify";
 import { ModeManager } from "./mode-manager";
 import { ModeType } from "./mode";
@@ -20,28 +20,61 @@ import { SwitchModeCommands } from "./switch-mode";
 export namespace ViModeKeybindingContexts {
 
     /**
+     * ID of a keybinding context that is enabled when the current vi mode is Insert mode.
+     */
+    export const insertModeActive = 'viInsertModeActive';
+
+    /**
      * ID of a keybinding context that is enabled when the current vi mode is Normal mode.
      */
     export const normalModeActive = 'viNormalModeActive';
 
     /**
+     * ID of a keybinding context that is enabled when the current vi mode is Visual mode.
+     */
+    export const visualModeActive = 'viVisualModeActive';
+
+    /**
+     * ID of a keybinding context that is enabled when the current vi mode is Visual Line mode.
+     */
+    export const visualLineModeActive = 'viVisualLineModeActive';
+
+    /**
      * ID of a keybinding context that is enabled when current vi mode can be switched.
      */
     export const switchMode = 'switchViMode';
-
-    // export const insertModeActive = 'viInsertModeActive';
 }
 
 @injectable()
 export class NormalModeContext extends EditorTextFocusContext {
     readonly id: string = ViModeKeybindingContexts.normalModeActive;
 
-    constructor(@inject(ModeManager) protected readonly modeManager: ModeManager) {
-        super();
-    }
+    @inject(ModeManager) protected readonly modeManager!: ModeManager;
 
     protected canHandle(widget: EditorWidget): boolean {
-        return super.canHandle(widget) && this.modeManager.currentMode.type == ModeType.Normal;
+        return super.canHandle(widget) && this.modeManager.activeMode.type == ModeType.Normal;
+    }
+}
+
+@injectable()
+export class VisualModeContext extends EditorTextFocusContext {
+    readonly id: string = ViModeKeybindingContexts.visualModeActive;
+
+    @inject(ModeManager) protected readonly modeManager!: ModeManager;
+
+    protected canHandle(widget: EditorWidget): boolean {
+        return super.canHandle(widget) && this.modeManager.activeMode.type == ModeType.Visual;
+    }
+}
+
+@injectable()
+export class VisualLineModeContext extends EditorTextFocusContext {
+    readonly id: string = ViModeKeybindingContexts.visualLineModeActive;
+
+    @inject(ModeManager) protected readonly modeManager!: ModeManager;
+
+    protected canHandle(widget: EditorWidget): boolean {
+        return super.canHandle(widget) && this.modeManager.activeMode.type == ModeType.Visual_Line;
     }
 }
 
@@ -49,8 +82,12 @@ export class NormalModeContext extends EditorTextFocusContext {
 export class SwitchModeContext implements KeybindingContext {
     readonly id: string = ViModeKeybindingContexts.switchMode;
 
+    @inject(ModeManager) protected readonly modeManager!: ModeManager;
+    @inject(EditorManager) protected readonly editorManager!: EditorManager;
+
     private switchToNormalModeCommands: string[] = [SwitchModeCommands.NORMAL_MODE.id];
     private switchToVisualModeCommands: string[] = [SwitchModeCommands.VISUAL_MODE.id];
+    private switchToVisualLineModeCommands: string[] = [SwitchModeCommands.VISUAL_LINE_MODE.id];
     private switchToInsertModeCommands: string[] = [
         SwitchModeCommands.INSERT_MODE_CURSOR_AFTER.id,
         SwitchModeCommands.INSERT_MODE_CURSOR_BEFORE.id,
@@ -60,41 +97,34 @@ export class SwitchModeContext implements KeybindingContext {
         SwitchModeCommands.INSERT_MODE_NEW_LINE_BELOW.id
     ];
 
-    constructor(@inject(ModeManager) protected readonly modeManager: ModeManager,
-        @inject(EditorManager) protected readonly editorManager: EditorManager) { }
-
     isEnabled(keybinding: Keybinding): boolean {
         const command = keybinding.command!;
-        const currentMode = this.modeManager.currentMode.type;
-        if (this.isNormalModeCommand(command) && currentMode === ModeType.Normal) {
+        const modeType = this.getModeTypeFor(command);
+
+        if (modeType === undefined) {
             return false;
         }
 
-        if (this.isInsertModeCommand(command) && currentMode === ModeType.Insert) {
-            return false;
+        return this.modeManager.isEnabled(modeType);
+    }
+
+    private getModeTypeFor(switchModecommandId: string): ModeType | undefined {
+        if (this.switchToNormalModeCommands.indexOf(switchModecommandId) !== -1) {
+            return ModeType.Normal;
         }
 
-        if (this.isVisualModeCommand(command) && currentMode !== ModeType.Normal) {
-            return false;
+        if (this.switchToInsertModeCommands.indexOf(switchModecommandId) !== -1) {
+            return (ModeType.Insert);
         }
 
-        return this.isEditorFocused();
-    }
+        if (this.switchToVisualModeCommands.indexOf(switchModecommandId) !== -1) {
+            return ModeType.Visual;
+        }
 
-    private isEditorFocused(): boolean {
-        const widget = this.editorManager.activeEditor;
-        return !!widget && widget.editor.isFocused();
-    }
+        if (this.switchToVisualLineModeCommands.indexOf(switchModecommandId) !== -1) {
+            return ModeType.Visual_Line;
+        }
 
-    private isNormalModeCommand(commandId: string): boolean {
-        return this.switchToNormalModeCommands.indexOf(commandId) !== -1;
-    }
-
-    private isVisualModeCommand(commandId: string): boolean {
-        return this.switchToVisualModeCommands.indexOf(commandId) !== -1;
-    }
-
-    private isInsertModeCommand(commandId: string): boolean {
-        return this.switchToInsertModeCommands.indexOf(commandId) !== -1;
+        return undefined;
     }
 }

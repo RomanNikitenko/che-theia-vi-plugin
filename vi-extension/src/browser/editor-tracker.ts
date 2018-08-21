@@ -1,9 +1,10 @@
 /*
- * Copyright (c) 2018 Red Hat, Inc.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2012-2018 Red Hat, Inc.
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0
+ * which is available at http://www.eclipse.org/legal/epl-2.0.html
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Red Hat, Inc. - initial API and implementation
@@ -27,7 +28,7 @@ export class TextEditorTracker {
 
     private onModeChanged(newMode: Mode) {
         for (const editor of this.editors) {
-            this.resolveCursorStyle(newMode.cursorStyle, editor);
+            this.resolveCursorStyleFor(editor, newMode);
         }
     }
 
@@ -35,7 +36,7 @@ export class TextEditorTracker {
         this.editors.add(editorWidget);
         editorWidget.disposed.connect(editor => this.onEditorRemoved(editorWidget));
 
-        this.resolveCursorStyle(this.modeManager.currentMode.cursorStyle, editorWidget);
+        this.resolveCursorStyleFor(editorWidget, this.modeManager.activeMode);
     }
 
     private onEditorRemoved(editorWidget: EditorWidget) {
@@ -44,10 +45,10 @@ export class TextEditorTracker {
         }
     }
 
-    private resolveCursorStyle(style: string, editorWidget: EditorWidget) {
+    private resolveCursorStyleFor(editorWidget: EditorWidget, mode: Mode) {
         if (editorWidget.editor instanceof MonacoEditor) {
             const monacoEditor = editorWidget.editor as MonacoEditor;
-            monacoEditor.getControl().updateOptions({ cursorStyle: style });
+            monacoEditor.getControl().updateOptions({ cursorStyle: mode.cursorStyle, cursorBlinking: mode.cursorBlinking });
         }
     }
 }

@@ -82,7 +82,7 @@ Publish packages with lerna to update versions properly across local packages, [
 | `o` | Inserts a new line below the current line and enters insert mode on the new line |
 | `O` | Inserts a new line above the current one and enters insert mode on the new line |
 
-### Move command for Normal mode
+### Move command for Normal Mode
 |Command | Desc |
 |--------|------|
 | `l` | Move forward |
@@ -94,3 +94,21 @@ Publish packages with lerna to update versions properly across local packages, [
 | `b` | Move to previous beginning of word |
 | `e` | Move to end of word |
 
+### Visual Mode
+|Command | Desc |
+|--------|------|
+| `v` | enter Visual Mode, this will also mark a starting selection point |
+| `right` | Select forward |
+| `left` | Select backward |
+| `up` | Select up |
+| `down` | Select down |
+
+Move the cursor to the desired end selection point; vi will provide a visual highlight of the text selection
+
+### Visual Line Mode
+|Command | Desc |
+|--------|------|
+| `V` | select current line and enter Visual Line Mode, this will make text selections by line |
+| `up` | select line up |
+| `down` | select line down |
+| `d` | delete selected lines |
