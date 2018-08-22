@@ -94,7 +94,7 @@ export class ViKeybindingContribution implements KeybindingContribution {
 
         this.keySequence.push(keyCode);
 
-        if (this.isEditorFocused && this.modeManager.activeMode.type != ModeType.Insert) {
+        if (this.isEditorFocused() && this.modeManager.activeMode.type != ModeType.Insert) {
             const bindingsResult = this.keybindingRegistry.getKeybindingsForKeySequence(this.keySequence);
             if (!this.hasActiveHandlerFor(bindingsResult.full)) {
                 event.preventDefault();
