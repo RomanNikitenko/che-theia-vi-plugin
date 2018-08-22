@@ -67,6 +67,81 @@ export class ViKeyBindings {
                 context: 'viNormalModeActive'
             },
 
+            /*** Visual mode commands ***/
+            {
+                command: 'visual.mode.select.right',
+                keybinding: "right",
+                context: 'viVisualModeActive'
+            },
+
+            {
+                command: 'visual.mode.select.right',
+                keybinding: "l",
+                context: 'viVisualModeActive'
+            },
+
+            {
+                command: 'visual.mode.select.left',
+                keybinding: "left",
+                context: 'viVisualModeActive'
+            },
+
+            {
+                command: 'visual.mode.select.left',
+                keybinding: "h",
+                context: 'viVisualModeActive'
+            },
+
+            {
+                command: 'visual.mode.select.up',
+                keybinding: "up",
+                context: 'viVisualModeActive'
+            },
+
+            {
+                command: 'visual.mode.select.up',
+                keybinding: "k",
+                context: 'viVisualModeActive'
+            },
+
+            {
+                command: 'visual.mode.select.down',
+                keybinding: "down",
+                context: 'viVisualModeActive'
+            },
+
+            {
+                command: 'visual.mode.select.down',
+                keybinding: "j",
+                context: 'viVisualModeActive'
+            },
+
+            /*** Visual Line mode commands ***/
+
+            {
+                command: 'visual.line.mode.select.up',
+                keybinding: "up",
+                context: 'viVisualLineModeActive'
+            },
+
+            {
+                command: 'visual.line.mode.select.up',
+                keybinding: "k",
+                context: 'viVisualLineModeActive'
+            },
+
+            {
+                command: 'visual.line.mode.select.down',
+                keybinding: "j",
+                context: 'viVisualLineModeActive'
+            },
+
+            {
+                command: 'visual.line.mode.delete',
+                keybinding: "d",
+                context: 'viVisualLineModeActive'
+            },
+
             /*** Switch vi mode commands ***/
             {
                 command: 'vi.switch.to.normalMode',
@@ -132,52 +207,7 @@ export class ViKeyBindings {
                 command: 'vi.switch.to.insertMode.newLineAbove',
                 keybinding: "shift+o",
                 context: 'switchViMode'
-            },
-
-            /*** Visual mode commands ***/
-            {
-                command: 'visual.mode.select.right',
-                keybinding: "right",
-                context: 'viVisualModeActive'
-            },
-
-            {
-                command: 'visual.mode.select.left',
-                keybinding: "left",
-                context: 'viVisualModeActive'
-            },
-
-            {
-                command: 'visual.mode.select.up',
-                keybinding: "up",
-                context: 'viVisualModeActive'
-            },
-
-            {
-                command: 'visual.mode.select.down',
-                keybinding: "down",
-                context: 'viVisualModeActive'
-            },
-
-            /*** Visual Line mode commands ***/
-
-            {
-                command: 'visual.line.mode.select.up',
-                keybinding: "up",
-                context: 'viVisualLineModeActive'
-            },
-
-            {
-                command: 'visual.line.mode.select.down',
-                keybinding: "down",
-                context: 'viVisualLineModeActive'
-            },
-
-            {
-                command: 'visual.line.mode.delete',
-                keybinding: "d",
-                context: 'viVisualLineModeActive'
-            },
+            }            
         ]
     }
 
