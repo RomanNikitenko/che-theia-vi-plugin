@@ -86,10 +86,10 @@ Publish packages with lerna to update versions properly across local packages, [
 |Command | Desc |
 |--------|------|
 | `esc (C-[)` | enter Normal Mode |
-| `l` | Move forward |
-| `h` | Move backward |
-| `j` | Move to the next line |
-| `k` | Move to the previous line |
+| `l (right)` | Move forward |
+| `h (left)` | Move backward |
+| `j (down)` | Move to the next line |
+| `k (up)` | Move to the previous line |
 | `0` | Move to the beginning of line |
 | `$` | Move to the end of line |
 | `b` | Move to previous beginning of word |

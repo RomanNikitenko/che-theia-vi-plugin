@@ -44,6 +44,30 @@ export class ViKeyBindings {
             },
 
             {
+                command: 'cursorLeft',
+                keybinding: "left",
+                context: 'viNormalModeActive'
+            },
+
+            {
+                command: 'cursorRight',
+                keybinding: "right",
+                context: 'viNormalModeActive'
+            },
+
+            {
+                command: 'cursorUp',
+                keybinding: "up",
+                context: 'viNormalModeActive'
+            },
+
+            {
+                command: 'cursorDown',
+                keybinding: "down",
+                context: 'viNormalModeActive'
+            },
+
+            {
                 command: 'cursorHome',
                 keybinding: "0",
                 context: 'viNormalModeActive'
@@ -133,6 +157,12 @@ export class ViKeyBindings {
             {
                 command: 'visual.line.mode.select.down',
                 keybinding: "j",
+                context: 'viVisualLineModeActive'
+            },
+
+            {
+                command: 'visual.line.mode.select.down',
+                keybinding: "down",
                 context: 'viVisualLineModeActive'
             },
 
