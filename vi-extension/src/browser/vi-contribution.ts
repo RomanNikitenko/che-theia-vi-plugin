@@ -53,6 +53,7 @@ export class ViKeybindingContribution implements KeybindingContribution {
         @inject(StatusBar) protected readonly statusBar: StatusBar,
         @inject(ModeManager) protected readonly modeManager: ModeManager,
         @inject(KeybindingRegistry) protected readonly keybindingRegistry: KeybindingRegistry,
+        @inject(CommandRegistry) protected readonly commandRegistry: CommandRegistry,
         @inject(EditorManager) protected readonly editorManager: EditorManager,
         @inject(ViKeyBindings) protected readonly viKeyBindings: ViKeyBindings) {
         document.addEventListener('keydown', event => this.handleKeyboardEvant(event), true);
@@ -93,16 +94,28 @@ export class ViKeybindingContribution implements KeybindingContribution {
 
         this.keySequence.push(keyCode);
 
-        if (this.modeManager.activeMode.type != ModeType.Insert) {
-            const bindings = this.keybindingRegistry.getKeybindingsForKeySequence(this.keySequence);
-
-            //TODO: remove and provide the mechanism to control input for different modes
-            if (bindings.full.length === 0) {
+        if (this.isEditorFocused && this.modeManager.activeMode.type != ModeType.Insert) {
+            const bindingsResult = this.keybindingRegistry.getKeybindingsForKeySequence(this.keySequence);
+            if (!this.hasActiveHandlerFor(bindingsResult.full)) {
                 event.preventDefault();
                 event.stopPropagation();
             }
         }
 
         this.keySequence = [];
+    }
+
+    private hasActiveHandlerFor(bindings: Keybinding[]): boolean {
+        for (const binding of bindings) {
+            if (this.commandRegistry.isEnabled(binding.command)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private isEditorFocused(): boolean {
+        const widget = this.editorManager.activeEditor;
+        return !!widget && widget.editor.isFocused();
     }
 }
