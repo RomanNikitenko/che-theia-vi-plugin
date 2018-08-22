@@ -12,23 +12,22 @@
 
 import { ContainerModule } from "inversify";
 import { CommandContribution } from "@theia/core/lib/common";
-import { KeybindingContribution, KeybindingContext } from '@theia/core/lib/browser';
-import { ViCommandContribution, ViKeybindingContribution } from './vi-contribution';
+import { KeybindingContribution, KeybindingContext, FrontendApplicationContribution } from '@theia/core/lib/browser';
+import { ViKeybindingContribution } from './vi-contribution';
 import { ModeManager } from "./mode/mode-manager";
 import { NormalModeContext, SwitchModeContext, VisualModeContext, VisualLineModeContext } from "./mode/mode-context";
 import { ViKeyBindings } from "./keybindings";
-import { ViCommands } from "./commands";
 import { TextEditorTracker } from "./editor-tracker";
 import { SwitchViModeCommandContribution } from "./mode/switch-mode";
 import { VisualModeCommandContribution } from "./mode/visual-mode";
+import { NormalModeCommandContribution } from "./mode/normal-mode";
 
 export default new ContainerModule(bind => {
 
     bind(TextEditorTracker).toSelf().inSingletonScope();
-    bind(ViCommands).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toDynamicValue(ctx => ctx.container.get(TextEditorTracker)).inSingletonScope();
+
     bind(ViKeyBindings).toSelf().inSingletonScope();
-
-
 
     bind(NormalModeContext);
     bind(KeybindingContext).to(NormalModeContext).inSingletonScope();
@@ -40,9 +39,9 @@ export default new ContainerModule(bind => {
     bind(KeybindingContext).to(SwitchModeContext).inSingletonScope();
     bind(ModeManager).toSelf().inSingletonScope();
 
-    bind(CommandContribution).to(ViCommandContribution);
     bind(CommandContribution).to(SwitchViModeCommandContribution);
     bind(CommandContribution).to(VisualModeCommandContribution);
+    bind(CommandContribution).to(NormalModeCommandContribution);
 
     bind(KeybindingContribution).to(ViKeybindingContribution);
 });

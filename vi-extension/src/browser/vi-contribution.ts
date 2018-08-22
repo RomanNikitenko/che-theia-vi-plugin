@@ -13,37 +13,11 @@
 import { injectable, inject } from "inversify";
 import { MonacoCommandRegistry } from '@theia/monaco/lib/browser/monaco-command-registry';
 import { KeybindingContribution, KeybindingRegistry, StatusBar, KeyCode, StatusBarAlignment, Keybinding, KeybindingScope, KeySequence } from '@theia/core/lib/browser';
-import { CommandContribution, CommandRegistry } from "@theia/core/lib/common";
+import { CommandRegistry } from "@theia/core/lib/common";
 import { ModeManager } from "./mode/mode-manager";
 import { ViKeyBindings } from "./keybindings";
-import { ViCommands } from "./commands";
 import { ModeType } from "./mode/mode";
 import { EditorManager } from "@theia/editor/lib/browser";
-import { TextEditorTracker } from "./editor-tracker";
-
-@injectable()
-export class ViCommandContribution implements CommandContribution {
-
-    constructor(@inject(MonacoCommandRegistry) protected readonly monacoCommandRegistry: MonacoCommandRegistry,
-        @inject(StatusBar) protected readonly statusBar: StatusBar,
-        @inject(ViCommands) protected readonly viCommands: ViCommands,
-        @inject(EditorManager) protected readonly editorManager: EditorManager,
-        @inject(ModeManager) protected readonly modeManager: ModeManager,
-        @inject(TextEditorTracker) protected readonly textEditorTracker: TextEditorTracker
-    ) { }
-
-    registerCommands(registry: CommandRegistry): void {
-        this.viCommands.getCommands().forEach(command => {
-            const commandId = command.id;
-            const monacoCommand = this.monacoCommandRegistry.validate(commandId);
-            if (!monacoCommand && !registry.getCommand(commandId)) {
-                this.monacoCommandRegistry.registerCommand({ 'id': commandId, 'label': command.label }, {
-                    execute: editor => editor.commandService.executeCommand(commandId)
-                });
-            }
-        });
-    }
-}
 
 @injectable()
 export class ViKeybindingContribution implements KeybindingContribution {

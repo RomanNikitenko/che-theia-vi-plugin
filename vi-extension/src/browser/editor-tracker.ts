@@ -15,13 +15,15 @@ import { EditorManager, EditorWidget } from "@theia/editor/lib/browser";
 import { ModeManager } from "./mode/mode-manager";
 import { Mode } from "./mode/mode";
 import { MonacoEditor } from "@theia/monaco/lib/browser/monaco-editor";
+import { DefaultFrontendApplicationContribution } from "@theia/core/lib/browser";
 
 @injectable()
-export class TextEditorTracker {
+export class TextEditorTracker extends DefaultFrontendApplicationContribution {
     private editors = new Set<EditorWidget>();
 
     constructor(@inject(EditorManager) protected readonly editorManager: EditorManager,
         @inject(ModeManager) protected readonly modeManager: ModeManager) {
+        super();
         editorManager.onCreated(editor => this.onEditorCreated(editor));
         modeManager.onModeChanged(newMode => this.onModeChanged(newMode));
     }

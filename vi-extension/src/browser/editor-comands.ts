@@ -13,8 +13,12 @@
 export namespace EditorCommands {
     export const MOVE_CURSOR_LEFT = 'cursorLeft';
     export const MOVE_CURSOR_RIGHT = 'cursorRight';
+    export const MOVE_CURSOR_UP = 'cursorUp';
+    export const MOVE_CURSOR_DOWN = 'cursorDown';
     export const MOVE_CURSOR_HOME = 'cursorHome';
     export const MOVE_CURSOR_END = 'cursorEnd';
+    export const MOVE_CURSOR_WORD_END_RIGHT = 'cursorWordEndRight';
+    export const MOVE_CURSOR_WORD_START_LEFT = 'cursorWordStartLeft';
     export const INSERT_LINE_ABOVE = 'editor.action.insertLineBefore';
     export const INSERT_LINE_BELOW = 'editor.action.insertLineAfter';
     export const DELETE_LINES = 'editor.action.deleteLines';

@@ -20,73 +20,73 @@ export class ViKeyBindings {
         this.keyBindings = [
             /*** Move commands ***/
             {
-                command: 'cursorLeft',
+                command: 'normal.mode.cursor.left',
                 keybinding: "h",
                 context: 'viNormalModeActive'
             },
 
             {
-                command: 'cursorRight',
+                command: 'normal.mode.cursor.right',
                 keybinding: "l",
                 context: 'viNormalModeActive'
             },
 
             {
-                command: 'cursorUp',
+                command: 'normal.mode.cursor.up',
                 keybinding: "k",
                 context: 'viNormalModeActive'
             },
 
             {
-                command: 'cursorDown',
+                command: 'normal.mode.cursor.down',
                 keybinding: "j",
                 context: 'viNormalModeActive'
             },
 
             {
-                command: 'cursorLeft',
+                command: 'normal.mode.cursor.left',
                 keybinding: "left",
                 context: 'viNormalModeActive'
             },
 
             {
-                command: 'cursorRight',
+                command: 'normal.mode.cursor.right',
                 keybinding: "right",
                 context: 'viNormalModeActive'
             },
 
             {
-                command: 'cursorUp',
+                command: 'normal.mode.cursor.up',
                 keybinding: "up",
                 context: 'viNormalModeActive'
             },
 
             {
-                command: 'cursorDown',
+                command: 'normal.mode.cursor.down',
                 keybinding: "down",
                 context: 'viNormalModeActive'
             },
 
             {
-                command: 'cursorHome',
+                command: 'normal.mode.cursor.home',
                 keybinding: "0",
                 context: 'viNormalModeActive'
             },
 
             {
-                command: 'cursorEnd',
+                command: 'normal.mode.cursor.end',
                 keybinding: "shift+4",//$
                 context: 'viNormalModeActive'
             },
 
             {
-                command: 'cursorWordStartLeft',
+                command: 'normal.mode.cursor.word.start.left',
                 keybinding: "b",
                 context: 'viNormalModeActive'
             },
 
             {
-                command: 'cursorWordEndRight',
+                command: 'normal.mode.cursor.word.end.right',
                 keybinding: "e",
                 context: 'viNormalModeActive'
             },
@@ -237,7 +237,7 @@ export class ViKeyBindings {
                 command: 'vi.switch.to.insertMode.newLineAbove',
                 keybinding: "shift+o",
                 context: 'switchViMode'
-            }            
+            }
         ]
     }
 
