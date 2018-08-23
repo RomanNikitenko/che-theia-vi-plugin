@@ -13,10 +13,9 @@
 import { injectable, inject } from "inversify";
 import { CommandContribution, CommandRegistry } from "@theia/core/lib/common/command";
 import { EditorManager } from "@theia/editor/lib/browser";
-import { MonacoEditor } from "@theia/monaco/lib/browser/monaco-editor";
 import { ModeManager } from "./mode-manager";
 import { ModeType } from "./mode";
-import { EditorCommands } from "../editor-comands";
+import { EditorCommands, EditorAgent } from "../editor-agent";
 
 export namespace NormalModeCommands {
     export const CURSOR_RIGHT = {
@@ -64,63 +63,48 @@ export namespace NormalModeCommands {
 export class NormalModeCommandContribution implements CommandContribution {
 
     @inject(ModeManager) protected readonly modeManager!: ModeManager;
+    @inject(EditorAgent) protected readonly editorAgent!: EditorAgent;
     @inject(EditorManager) protected readonly editorManager!: EditorManager;
 
     registerCommands(registry: CommandRegistry): void {
         registry.registerCommand(NormalModeCommands.CURSOR_RIGHT, {
-            execute: () => this.executeEditorCommand(EditorCommands.MOVE_CURSOR_RIGHT),
-            isEnabled: () => this.isNormalModeActive()
+            execute: () => this.editorAgent.executeCommand(EditorCommands.MOVE_CURSOR_RIGHT),
+            isEnabled: () => this.modeManager.isActive(ModeType.Normal)
         });
 
         registry.registerCommand(NormalModeCommands.CURSOR_LEFT, {
-            execute: () => this.executeEditorCommand(EditorCommands.MOVE_CURSOR_LEFT),
-            isEnabled: () => this.isNormalModeActive()
+            execute: () => this.editorAgent.executeCommand(EditorCommands.MOVE_CURSOR_LEFT),
+            isEnabled: () => this.modeManager.isActive(ModeType.Normal)
         });
 
         registry.registerCommand(NormalModeCommands.CURSOR_UP, {
-            execute: () => this.executeEditorCommand(EditorCommands.MOVE_CURSOR_UP),
-            isEnabled: () => this.isNormalModeActive()
+            execute: () => this.editorAgent.executeCommand(EditorCommands.MOVE_CURSOR_UP),
+            isEnabled: () => this.modeManager.isActive(ModeType.Normal)
         });
 
         registry.registerCommand(NormalModeCommands.CURSOR_DOWN, {
-            execute: () => this.executeEditorCommand(EditorCommands.MOVE_CURSOR_DOWN),
-            isEnabled: () => this.isNormalModeActive()
+            execute: () => this.editorAgent.executeCommand(EditorCommands.MOVE_CURSOR_DOWN),
+            isEnabled: () => this.modeManager.isActive(ModeType.Normal)
         });
 
         registry.registerCommand(NormalModeCommands.CURSOR_HOME, {
-            execute: () => this.executeEditorCommand(EditorCommands.MOVE_CURSOR_HOME),
-            isEnabled: () => this.isNormalModeActive()
+            execute: () => this.editorAgent.executeCommand(EditorCommands.MOVE_CURSOR_HOME),
+            isEnabled: () => this.modeManager.isActive(ModeType.Normal)
         });
 
         registry.registerCommand(NormalModeCommands.CURSOR_END, {
-            execute: () => this.executeEditorCommand(EditorCommands.MOVE_CURSOR_END),
-            isEnabled: () => this.isNormalModeActive()
+            execute: () => this.editorAgent.executeCommand(EditorCommands.MOVE_CURSOR_END),
+            isEnabled: () => this.modeManager.isActive(ModeType.Normal)
         });
 
         registry.registerCommand(NormalModeCommands.CURSOR_WORD_END_RIGHT, {
-            execute: () => this.executeEditorCommand(EditorCommands.MOVE_CURSOR_WORD_END_RIGHT),
-            isEnabled: () => this.isNormalModeActive()
+            execute: () => this.editorAgent.executeCommand(EditorCommands.MOVE_CURSOR_WORD_END_RIGHT),
+            isEnabled: () => this.modeManager.isActive(ModeType.Normal)
         });
 
         registry.registerCommand(NormalModeCommands.CURSOR_WORD_START_LEFT, {
-            execute: () => this.executeEditorCommand(EditorCommands.MOVE_CURSOR_WORD_START_LEFT),
-            isEnabled: () => this.isNormalModeActive()
+            execute: () => this.editorAgent.executeCommand(EditorCommands.MOVE_CURSOR_WORD_START_LEFT),
+            isEnabled: () => this.modeManager.isActive(ModeType.Normal)
         });
-    }
-
-    private isNormalModeActive(): boolean {
-        return this.modeManager.activeMode.type == ModeType.Normal;
-    }
-
-    private getEditor(): MonacoEditor | undefined {
-        const editorWidget = this.editorManager.activeEditor!;
-        const activeEditor = editorWidget.editor;
-
-        return activeEditor instanceof MonacoEditor ? activeEditor as MonacoEditor : undefined;
-    }
-
-    private executeEditorCommand(commandId: string) {
-        const editor = this.getEditor()!;
-        editor.commandService.executeCommand(commandId);
     }
 }

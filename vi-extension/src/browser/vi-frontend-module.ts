@@ -21,8 +21,13 @@ import { TextEditorTracker } from "./editor-tracker";
 import { SwitchViModeCommandContribution } from "./mode/switch-mode";
 import { VisualModeCommandContribution } from "./mode/visual-mode";
 import { NormalModeCommandContribution } from "./mode/normal-mode";
+import { EditorAgent } from "./editor-agent";
+import { SelectionAgent } from "./selection-agent";
 
 export default new ContainerModule(bind => {
+
+    bind(EditorAgent).toSelf().inSingletonScope();
+    bind(SelectionAgent).toSelf().inSingletonScope();
 
     bind(TextEditorTracker).toSelf().inSingletonScope();
     bind(FrontendApplicationContribution).toDynamicValue(ctx => ctx.container.get(TextEditorTracker)).inSingletonScope();

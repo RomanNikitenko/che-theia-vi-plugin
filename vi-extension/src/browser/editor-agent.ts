@@ -9,6 +9,9 @@
  * Contributors:
  *   Red Hat, Inc. - initial API and implementation
  */
+import { injectable, inject } from "inversify";
+import { EditorManager } from "@theia/editor/lib/browser";
+import { MonacoEditor } from "@theia/monaco/lib/browser/monaco-editor";
 
 export namespace EditorCommands {
     export const MOVE_CURSOR_LEFT = 'cursorLeft';
@@ -22,4 +25,26 @@ export namespace EditorCommands {
     export const INSERT_LINE_ABOVE = 'editor.action.insertLineBefore';
     export const INSERT_LINE_BELOW = 'editor.action.insertLineAfter';
     export const DELETE_LINES = 'editor.action.deleteLines';
+}
+
+@injectable()
+export class EditorAgent {
+    @inject(EditorManager) protected readonly editorManager!: EditorManager;
+
+    getActiveEditor(): MonacoEditor | undefined {
+        const editorWidget = this.editorManager.activeEditor!;
+        const activeEditor = editorWidget.editor;
+
+        return activeEditor instanceof MonacoEditor ? activeEditor as MonacoEditor : undefined;
+    }
+
+    isEditorFocused(): boolean {
+        const widget = this.editorManager.activeEditor;
+        return !!widget && widget.editor.isFocused();
+    }
+
+    executeCommand(commandId: string) {
+        const editor = this.getActiveEditor()!;
+        editor.commandService.executeCommand(commandId);
+    }
 }

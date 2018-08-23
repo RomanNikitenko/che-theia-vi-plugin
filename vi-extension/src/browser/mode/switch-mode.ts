@@ -15,9 +15,8 @@ import { CommandContribution, CommandRegistry } from "@theia/core/lib/common/com
 import { EditorManager } from "@theia/editor/lib/browser";
 import { ModeManager } from "./mode-manager";
 import { ModeType } from "./mode";
-import { MonacoEditor } from "@theia/monaco/lib/browser/monaco-editor";
 import { VisualLineModeCommands } from "./visual-mode";
-import { EditorCommands } from "../editor-comands";
+import { EditorCommands, EditorAgent } from "../editor-agent";
 
 export namespace SwitchModeCommands {
     export const NORMAL_MODE = {
@@ -69,14 +68,14 @@ export namespace SwitchModeCommands {
 @injectable()
 export class SwitchViModeCommandContribution implements CommandContribution {
 
-    constructor(@inject(ModeManager) protected readonly modeManager: ModeManager,
-        @inject(EditorManager) protected readonly editorManager: EditorManager
-    ) { }
+    @inject(ModeManager) protected readonly modeManager!: ModeManager;
+    @inject(EditorAgent) protected readonly editorAgent!: EditorAgent;
+    @inject(EditorManager) protected readonly editorManager!: EditorManager;
 
     registerCommands(registry: CommandRegistry): void {
         registry.registerCommand(SwitchModeCommands.NORMAL_MODE, {
             execute: () => {
-                this.executeEditorCommand(EditorCommands.MOVE_CURSOR_LEFT);
+                this.editorAgent.executeCommand(EditorCommands.MOVE_CURSOR_LEFT);
                 this.modeManager.setActiveMode(ModeType.Normal);
             },
             isEnabled: () => this.modeManager.isEnabled(ModeType.Normal)
@@ -90,7 +89,7 @@ export class SwitchViModeCommandContribution implements CommandContribution {
         registry.registerCommand(SwitchModeCommands.VISUAL_LINE_MODE, {
             execute: () => {
                 this.modeManager.setActiveMode(ModeType.Visual_Line);
-                this.executeEditorCommand(VisualLineModeCommands.SELECT_LINE_HOME.id);
+                this.editorAgent.executeCommand(VisualLineModeCommands.SELECT_LINE_HOME.id);
             },
             isEnabled: () => this.modeManager.isEnabled(ModeType.Visual_Line)
         });
@@ -102,7 +101,7 @@ export class SwitchViModeCommandContribution implements CommandContribution {
 
         registry.registerCommand(SwitchModeCommands.INSERT_MODE_CURSOR_AFTER, {
             execute: () => {
-                this.executeEditorCommand(EditorCommands.MOVE_CURSOR_RIGHT);
+                this.editorAgent.executeCommand(EditorCommands.MOVE_CURSOR_RIGHT);
                 this.modeManager.setActiveMode(ModeType.Insert);
             },
 
@@ -111,7 +110,7 @@ export class SwitchViModeCommandContribution implements CommandContribution {
 
         registry.registerCommand(SwitchModeCommands.INSERT_MODE_CURSOR_HOME, {
             execute: () => {
-                this.executeEditorCommand(EditorCommands.MOVE_CURSOR_HOME);
+                this.editorAgent.executeCommand(EditorCommands.MOVE_CURSOR_HOME);
                 this.modeManager.setActiveMode(ModeType.Insert);
             },
             isEnabled: () => this.modeManager.isEnabled(ModeType.Insert)
@@ -119,7 +118,7 @@ export class SwitchViModeCommandContribution implements CommandContribution {
 
         registry.registerCommand(SwitchModeCommands.INSERT_MODE_CURSOR_END, {
             execute: () => {
-                this.executeEditorCommand(EditorCommands.MOVE_CURSOR_END);
+                this.editorAgent.executeCommand(EditorCommands.MOVE_CURSOR_END);
                 this.modeManager.setActiveMode(ModeType.Insert);
             },
             isEnabled: () => this.modeManager.isEnabled(ModeType.Insert)
@@ -127,7 +126,7 @@ export class SwitchViModeCommandContribution implements CommandContribution {
 
         registry.registerCommand(SwitchModeCommands.INSERT_MODE_NEW_LINE_BELOW, {
             execute: () => {
-                this.executeEditorCommand(EditorCommands.INSERT_LINE_BELOW);
+                this.editorAgent.executeCommand(EditorCommands.INSERT_LINE_BELOW);
                 this.modeManager.setActiveMode(ModeType.Insert);
             },
             isEnabled: () => this.modeManager.isEnabled(ModeType.Insert)
@@ -135,18 +134,10 @@ export class SwitchViModeCommandContribution implements CommandContribution {
 
         registry.registerCommand(SwitchModeCommands.INSERT_MODE_NEW_LINE_ABOVE, {
             execute: () => {
-                this.executeEditorCommand(EditorCommands.INSERT_LINE_ABOVE);
+                this.editorAgent.executeCommand(EditorCommands.INSERT_LINE_ABOVE);
                 this.modeManager.setActiveMode(ModeType.Insert);
             },
             isEnabled: () => this.modeManager.isEnabled(ModeType.Insert)
         });
-    }
-
-    private executeEditorCommand(commandId: string) {
-        const currentEditor = this.editorManager.currentEditor!;
-        if (currentEditor.editor instanceof MonacoEditor) {
-            const monacoEditor = currentEditor.editor as MonacoEditor;
-            monacoEditor.commandService.executeCommand(commandId);
-        }
     }
 }

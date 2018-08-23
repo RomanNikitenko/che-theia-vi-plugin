@@ -10,24 +10,11 @@
  *   Red Hat, Inc. - initial API and implementation
  */
 
-import {
-    Mode, ModeType,
-    INSERT_MODE_STATUS_TEXT,
-    VISUAL_MODE_STATUS_TEXT,
-    VISUAL_LINE_MODE_STATUS_TEXT,
-    NORMAL_MODE_STATUS_TEXT,
-    REPLACE_MODE_STATUS_TEXT,
-    NORMAL_MODE_CURSOR_STYLE,
-    INSERT_MODE_CURSOR_STYLE,
-    VISUAL_MODE_CURSOR_STYLE,
-    REPLACE_MODE_CURSOR_STYLE,
-    VISUAL_LINE_MODE_CURSOR_BLINKING
-
-} from "./mode";
+import { Mode, ModeType, ModeOptions } from "./mode";
 import { injectable, inject } from "inversify";
 import { StatusBar, StatusBarAlignment } from "@theia/core/lib/browser";
 import { Event, Emitter } from "@theia/core";
-import { EditorManager } from "@theia/editor/lib/browser";
+import { EditorAgent } from "../editor-agent";
 
 @injectable()
 export class ModeManager {
@@ -38,14 +25,14 @@ export class ModeManager {
     onModeChanged: Event<Mode> = this.onModeChangedEmitter.event;
 
     constructor(@inject(StatusBar) protected readonly statusBar: StatusBar,
-        @inject(EditorManager) protected readonly editorManager: EditorManager) {
+        @inject(EditorAgent) protected readonly editorAgent: EditorAgent) {
 
         this._modes = [
-            new Mode(ModeType.Normal, NORMAL_MODE_STATUS_TEXT, { cursorStyle: NORMAL_MODE_CURSOR_STYLE }),
-            new Mode(ModeType.Insert, INSERT_MODE_STATUS_TEXT, { cursorStyle: INSERT_MODE_CURSOR_STYLE }),
-            new Mode(ModeType.Visual, VISUAL_MODE_STATUS_TEXT, { cursorStyle: VISUAL_MODE_CURSOR_STYLE, cursorBlinking: VISUAL_LINE_MODE_CURSOR_BLINKING }),
-            new Mode(ModeType.Visual_Line, VISUAL_LINE_MODE_STATUS_TEXT, { cursorStyle: VISUAL_MODE_CURSOR_STYLE }),
-            new Mode(ModeType.Replace, REPLACE_MODE_STATUS_TEXT, { cursorStyle: REPLACE_MODE_CURSOR_STYLE })
+            new Mode(ModeType.Normal, ModeOptions.NORMAL_MODE_STATUS_TEXT, { cursorStyle: ModeOptions.NORMAL_MODE_CURSOR_STYLE }),
+            new Mode(ModeType.Insert, ModeOptions.INSERT_MODE_STATUS_TEXT, { cursorStyle: ModeOptions.INSERT_MODE_CURSOR_STYLE }),
+            new Mode(ModeType.Visual, ModeOptions.VISUAL_MODE_STATUS_TEXT, { cursorStyle: ModeOptions.VISUAL_MODE_CURSOR_STYLE, cursorBlinking: ModeOptions.VISUAL_LINE_MODE_CURSOR_BLINKING }),
+            new Mode(ModeType.Visual_Line, ModeOptions.VISUAL_LINE_MODE_STATUS_TEXT, { cursorStyle: ModeOptions.VISUAL_MODE_CURSOR_STYLE }),
+            new Mode(ModeType.Replace, ModeOptions.REPLACE_MODE_STATUS_TEXT, { cursorStyle: ModeOptions.REPLACE_MODE_CURSOR_STYLE })
         ]
 
         this.setActiveMode(ModeType.Normal);
@@ -71,7 +58,7 @@ export class ModeManager {
     }
 
     isEnabled(type: ModeType): boolean {
-        if (!this.isEditorFocused()) {
+        if (!this.editorAgent.isEditorFocused()) {
             return false;
         }
 
@@ -90,10 +77,5 @@ export class ModeManager {
             default:
                 return false;
         }
-    }
-
-    private isEditorFocused(): boolean {
-        const widget = this.editorManager.activeEditor;
-        return !!widget && widget.editor.isFocused();
     }
 }

@@ -76,16 +76,16 @@ Publish packages with lerna to update versions properly across local packages, [
 |Command | Desc |
 |--------|------|
 | `a` | Moves the cursor after the current character and enters insert mode |
-| `M-a` | Moves the cursor to the end of the line and enters insert mode |
+| `A` | Moves the cursor to the end of the line and enters insert mode |
 | `i (ins)` | Switches to insert mode |
-| `M-i` | Moves the cursor to the beginning of the line and enters insert mode |
+| `I` | Moves the cursor to the beginning of the line and enters insert mode |
 | `o` | Inserts a new line below the current line and enters insert mode on the new line |
-| `M-o` | Inserts a new line above the current one and enters insert mode on the new line |
+| `O` | Inserts a new line above the current one and enters insert mode on the new line |
 
 ### Move command for Normal Mode
 |Command | Desc |
 |--------|------|
-| `esc (C-[)` | enter Normal Mode |
+| `esc (ctrl-[)` | enter Normal Mode |
 | `l (right)` | Move forward |
 | `h (left)` | Move backward |
 | `j (down)` | Move to the next line |
@@ -109,7 +109,7 @@ Move the cursor to the desired end selection point; vi will provide a visual hig
 ### Visual Line Mode
 |Command | Desc |
 |--------|------|
-| `M-v` | select current line and enter Visual Line Mode, this will make text selections by line |
+| `V` | select current line and enter Visual Line Mode, this will make text selections by line |
 | `k (up)` | select line up |
 | `j (down)` | select line down |
 | `d` | delete selected lines |

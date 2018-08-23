@@ -17,7 +17,7 @@ import { CommandRegistry } from "@theia/core/lib/common";
 import { ModeManager } from "./mode/mode-manager";
 import { ViKeyBindings } from "./keybindings";
 import { ModeType } from "./mode/mode";
-import { EditorManager } from "@theia/editor/lib/browser";
+import { EditorAgent } from "./editor-agent";
 
 @injectable()
 export class ViKeybindingContribution implements KeybindingContribution {
@@ -28,7 +28,7 @@ export class ViKeybindingContribution implements KeybindingContribution {
         @inject(ModeManager) protected readonly modeManager: ModeManager,
         @inject(KeybindingRegistry) protected readonly keybindingRegistry: KeybindingRegistry,
         @inject(CommandRegistry) protected readonly commandRegistry: CommandRegistry,
-        @inject(EditorManager) protected readonly editorManager: EditorManager,
+        @inject(EditorAgent) protected readonly editorAgent: EditorAgent,
         @inject(ViKeyBindings) protected readonly viKeyBindings: ViKeyBindings) {
         document.addEventListener('keydown', event => this.handleKeyboardEvant(event), true);
         this.statusBar.removeElement('hotkey-status');
@@ -68,7 +68,7 @@ export class ViKeybindingContribution implements KeybindingContribution {
 
         this.keySequence.push(keyCode);
 
-        if (this.isEditorFocused() && this.modeManager.activeMode.type != ModeType.Insert) {
+        if (this.editorAgent.isEditorFocused() && !this.modeManager.isActive(ModeType.Insert)) {
             const bindingsResult = this.keybindingRegistry.getKeybindingsForKeySequence(this.keySequence);
             if (!this.hasActiveHandlerFor(bindingsResult.full)) {
                 event.preventDefault();
@@ -86,10 +86,5 @@ export class ViKeybindingContribution implements KeybindingContribution {
             }
         }
         return false;
-    }
-
-    private isEditorFocused(): boolean {
-        const widget = this.editorManager.activeEditor;
-        return !!widget && widget.editor.isFocused();
     }
 }

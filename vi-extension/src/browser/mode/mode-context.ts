@@ -13,7 +13,7 @@
 import { injectable, inject } from "inversify";
 import { ModeManager } from "./mode-manager";
 import { ModeType } from "./mode";
-import { EditorTextFocusContext, EditorWidget, EditorManager } from "@theia/editor/lib/browser";
+import { EditorTextFocusContext, EditorWidget } from "@theia/editor/lib/browser";
 import { KeybindingContext, Keybinding } from "@theia/core/lib/browser/keybinding";
 import { SwitchModeCommands } from "./switch-mode";
 
@@ -83,7 +83,6 @@ export class SwitchModeContext implements KeybindingContext {
     readonly id: string = ViModeKeybindingContexts.switchMode;
 
     @inject(ModeManager) protected readonly modeManager!: ModeManager;
-    @inject(EditorManager) protected readonly editorManager!: EditorManager;
 
     private switchToNormalModeCommands: string[] = [SwitchModeCommands.NORMAL_MODE.id];
     private switchToVisualModeCommands: string[] = [SwitchModeCommands.VISUAL_MODE.id];
