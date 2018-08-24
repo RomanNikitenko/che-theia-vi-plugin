@@ -1,14 +1,12 @@
-/*
- * Copyright (c) 2012-2018 Red Hat, Inc.
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which is available at http://www.eclipse.org/legal/epl-2.0.html
+/*********************************************************************
+ * Copyright (c) 2018 Red Hat, Inc.
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Red Hat, Inc. - initial API and implementation
- */
+ **********************************************************************/
 
 import { Mode, ModeType, ModeOptions } from "./mode";
 import { injectable, inject } from "inversify";
@@ -30,10 +28,11 @@ export class ModeManager {
         this._modes = [
             new Mode(ModeType.Normal, ModeOptions.NORMAL_MODE_STATUS_TEXT, { cursorStyle: ModeOptions.NORMAL_MODE_CURSOR_STYLE }),
             new Mode(ModeType.Insert, ModeOptions.INSERT_MODE_STATUS_TEXT, { cursorStyle: ModeOptions.INSERT_MODE_CURSOR_STYLE }),
-            new Mode(ModeType.Visual, ModeOptions.VISUAL_MODE_STATUS_TEXT, { cursorStyle: ModeOptions.VISUAL_MODE_CURSOR_STYLE, cursorBlinking: ModeOptions.VISUAL_LINE_MODE_CURSOR_BLINKING }),
+            new Mode(ModeType.Visual, ModeOptions.VISUAL_MODE_STATUS_TEXT,
+                { cursorStyle: ModeOptions.VISUAL_MODE_CURSOR_STYLE, cursorBlinking: ModeOptions.VISUAL_LINE_MODE_CURSOR_BLINKING }),
             new Mode(ModeType.Visual_Line, ModeOptions.VISUAL_LINE_MODE_STATUS_TEXT, { cursorStyle: ModeOptions.VISUAL_MODE_CURSOR_STYLE }),
             new Mode(ModeType.Replace, ModeOptions.REPLACE_MODE_STATUS_TEXT, { cursorStyle: ModeOptions.REPLACE_MODE_CURSOR_STYLE })
-        ]
+        ];
 
         this.setActiveMode(ModeType.Normal);
     }
@@ -57,23 +56,21 @@ export class ModeManager {
         return this._activeMode.type === type;
     }
 
+    /** Returns true if it is possible to switch to given mode type and false otherwise  */
     isEnabled(type: ModeType): boolean {
         if (!this.editorAgent.isEditorFocused()) {
             return false;
         }
 
-        const activeModeType = this._activeMode.type;
         switch (type) {
             case ModeType.Normal:
-                return activeModeType !== ModeType.Normal;
+                return !this.isActive(ModeType.Normal);
             case ModeType.Insert:
-                return activeModeType !== ModeType.Insert;
+                return !this.isActive(ModeType.Insert);
             case ModeType.Visual:
-                return activeModeType === ModeType.Normal
-                    || activeModeType === ModeType.Visual_Line;
+                return this.isActive(ModeType.Normal) || this.isActive(ModeType.Visual_Line);
             case ModeType.Visual_Line:
-                return activeModeType === ModeType.Normal
-                    || activeModeType === ModeType.Visual;
+                return this.isActive(ModeType.Normal) || this.isActive(ModeType.Visual);
             default:
                 return false;
         }

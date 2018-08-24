@@ -1,14 +1,12 @@
-/*
-* Copyright (c) 2012-2018 Red Hat, Inc.
-* This program and the accompanying materials
-* are made available under the terms of the Eclipse Public License v2.0
-* which is available at http://www.eclipse.org/legal/epl-2.0.html
-*
-* SPDX-License-Identifier: EPL-2.0
-*
-* Contributors:
-*   Red Hat, Inc. - initial API and implementation
-*/
+/*********************************************************************
+ * Copyright (c) 2018 Red Hat, Inc.
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ **********************************************************************/
 
 import { injectable, inject } from "inversify";
 import { ModeManager } from "./mode-manager";
@@ -52,7 +50,7 @@ export class NormalModeContext extends EditorTextFocusContext {
     @inject(ModeManager) protected readonly modeManager!: ModeManager;
 
     protected canHandle(widget: EditorWidget): boolean {
-        return super.canHandle(widget) && this.modeManager.activeMode.type == ModeType.Normal;
+        return super.canHandle(widget) && this.modeManager.isActive(ModeType.Normal);
     }
 }
 
@@ -63,7 +61,7 @@ export class VisualModeContext extends EditorTextFocusContext {
     @inject(ModeManager) protected readonly modeManager!: ModeManager;
 
     protected canHandle(widget: EditorWidget): boolean {
-        return super.canHandle(widget) && this.modeManager.activeMode.type == ModeType.Visual;
+        return super.canHandle(widget) && this.modeManager.isActive(ModeType.Visual);
     }
 }
 
@@ -74,7 +72,7 @@ export class VisualLineModeContext extends EditorTextFocusContext {
     @inject(ModeManager) protected readonly modeManager!: ModeManager;
 
     protected canHandle(widget: EditorWidget): boolean {
-        return super.canHandle(widget) && this.modeManager.activeMode.type == ModeType.Visual_Line;
+        return super.canHandle(widget) && this.modeManager.isActive(ModeType.Visual_Line);
     }
 }
 

@@ -1,14 +1,12 @@
-/*
- * Copyright (c) 2012-2018 Red Hat, Inc.
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which is available at http://www.eclipse.org/legal/epl-2.0.html
+/*********************************************************************
+ * Copyright (c) 2018 Red Hat, Inc.
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Red Hat, Inc. - initial API and implementation
- */
+ **********************************************************************/
 
 import { injectable, inject } from "inversify";
 import { CommandContribution, CommandRegistry } from "@theia/core/lib/common/command";
@@ -22,44 +20,44 @@ export namespace VisualModeCommands {
     export const SELECT_RIGHT = {
         id: 'visual.mode.select.right',
         label: 'Select Right'
-    }
+    };
 
     export const SELECT_LEFT = {
         id: 'visual.mode.select.left',
         label: 'Select Left'
-    }
+    };
 
     export const SELECT_UP = {
         id: 'visual.mode.select.up',
         label: 'Select Up'
-    }
+    };
 
     export const SELECT_DOWN = {
         id: 'visual.mode.select.down',
         label: 'Select Down'
-    }
+    };
 }
 
 export namespace VisualLineModeCommands {
     export const SELECT_UP = {
         id: 'visual.line.mode.select.up',
         label: 'Select Line Up'
-    }
+    };
 
     export const SELECT_DOWN = {
         id: 'visual.line.mode.select.down',
         label: 'Select Line Down'
-    }
+    };
 
     export const SELECT_LINE_HOME = {
         id: 'visual.line.mode.select.line.home',
         label: 'Select Line, set cursor at the beginning of the line'
-    }
+    };
 
     export const DELETE_SELECTED = {
         id: 'visual.line.mode.delete',
         label: 'Delete selected lines'
-    }
+    };
 }
 
 @injectable()

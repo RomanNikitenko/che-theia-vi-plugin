@@ -1,14 +1,13 @@
-/*
- * Copyright (c) 2012-2018 Red Hat, Inc.
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which is available at http://www.eclipse.org/legal/epl-2.0.html
+/*********************************************************************
+ * Copyright (c) 2018 Red Hat, Inc.
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Red Hat, Inc. - initial API and implementation
- */
+ **********************************************************************/
+
 import { Keybinding } from "@theia/core/lib/browser";
 import { injectable } from "inversify";
 
@@ -18,7 +17,9 @@ export class ViKeyBindings {
 
     constructor() {
         this.keyBindings = [
-            /*** Move commands ***/
+
+            /*** Normal Mode ***/
+
             {
                 command: 'normal.mode.cursor.left',
                 keybinding: "h",
@@ -75,7 +76,7 @@ export class ViKeyBindings {
 
             {
                 command: 'normal.mode.cursor.end',
-                keybinding: "shift+4",//$
+                keybinding: "shift+4", // $
                 context: 'viNormalModeActive'
             },
 
@@ -91,7 +92,8 @@ export class ViKeyBindings {
                 context: 'viNormalModeActive'
             },
 
-            /*** Visual mode commands ***/
+            /*** Visual Mode ***/
+
             {
                 command: 'visual.mode.select.right',
                 keybinding: "right",
@@ -140,7 +142,7 @@ export class ViKeyBindings {
                 context: 'viVisualModeActive'
             },
 
-            /*** Visual Line mode commands ***/
+            /*** Visual Line Mode ***/
 
             {
                 command: 'visual.line.mode.select.up',
@@ -172,7 +174,8 @@ export class ViKeyBindings {
                 context: 'viVisualLineModeActive'
             },
 
-            /*** Switch vi mode commands ***/
+            /*** Switching vi mode ***/
+
             {
                 command: 'vi.switch.to.normalMode',
                 keybinding: "esc",
@@ -238,7 +241,7 @@ export class ViKeyBindings {
                 keybinding: "shift+o",
                 context: 'switchViMode'
             }
-        ]
+        ];
     }
 
     getKeybindingsForCommand(commandId: string): Keybinding[] {

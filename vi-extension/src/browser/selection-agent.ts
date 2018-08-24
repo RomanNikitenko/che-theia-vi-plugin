@@ -1,14 +1,13 @@
-/*
- * Copyright (c) 2012-2018 Red Hat, Inc.
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which is available at http://www.eclipse.org/legal/epl-2.0.html
+/*********************************************************************
+ * Copyright (c) 2018 Red Hat, Inc.
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Red Hat, Inc. - initial API and implementation
- */
+ **********************************************************************/
+
 import { injectable, inject } from "inversify";
 import Selection = monaco.Selection;
 import { EditorAgent } from "./editor-agent";
@@ -71,12 +70,12 @@ export class SelectionAgent {
         const currentSelectionEndLine = currentSelection.endLineNumber;
 
         const direction = currentSelection.getDirection();
-        const positionLineNumber = currentSelection.getPosition().lineNumber - 1
+        const positionLineNumber = currentSelection.getPosition().lineNumber - 1;
         const lineMaxColumn = control.getModel().getLineMaxColumn(positionLineNumber);
 
-        const positionColumn = currentSelectionStartLine == currentSelectionEndLine || direction == 1 ? 1 : lineMaxColumn;
-        const newSelectionStartLine = direction == 1 ? currentSelectionEndLine : currentSelectionStartLine;
-        const newSelectionStartColumn = currentSelectionStartLine == currentSelectionEndLine || direction == 1 ? currentSelection.endColumn : 1;
+        const positionColumn = currentSelectionStartLine === currentSelectionEndLine || direction === 1 ? 1 : lineMaxColumn;
+        const newSelectionStartLine = direction === 1 ? currentSelectionEndLine : currentSelectionStartLine;
+        const newSelectionStartColumn = currentSelectionStartLine === currentSelectionEndLine || direction === 1 ? currentSelection.endColumn : 1;
 
         control.setSelection({
             selectionStartLineNumber: newSelectionStartLine,
@@ -95,12 +94,12 @@ export class SelectionAgent {
         const currentSelectionEndLine = currentSelection.endLineNumber;
 
         const direction = currentSelection.getDirection();
-        const positionLineNumber = currentSelection.getPosition().lineNumber + 1
+        const positionLineNumber = currentSelection.getPosition().lineNumber + 1;
         const lineMaxColumn = control.getModel().getLineMaxColumn(positionLineNumber);
 
-        const positionColumn = currentSelectionStartLine != currentSelectionEndLine && direction == 1 ? 1 : lineMaxColumn;
-        const newSelectionStartLine = direction == 1 ? currentSelectionEndLine : currentSelectionStartLine;
-        const newSelectionStartColumn = currentSelectionStartLine != currentSelectionEndLine && direction == 1 ? currentSelection.endColumn : 1;
+        const positionColumn = currentSelectionStartLine !== currentSelectionEndLine && direction === 1 ? 1 : lineMaxColumn;
+        const newSelectionStartLine = direction === 1 ? currentSelectionEndLine : currentSelectionStartLine;
+        const newSelectionStartColumn = currentSelectionStartLine !== currentSelectionEndLine && direction === 1 ? currentSelection.endColumn : 1;
 
         control.setSelection({
             selectionStartLineNumber: newSelectionStartLine,
@@ -113,15 +112,16 @@ export class SelectionAgent {
 
     /**
      * Change selection from start selection to given position.
-     *  
+     *
+     * @param currentSelection start selection
      * @param positionLineNumber the line number on which the selection should be ended.
      * @param positionColumn the column on `positionLineNumber` where the selection should be ended.
-	 */
+     */
     private changeSelection(currentSelection: Selection, positionLineNumber: number, positionColumn: number) {
         const direction = currentSelection.getDirection();
 
-        const newSelectionStartLine = direction == 1 ? currentSelection.endLineNumber : currentSelection.startLineNumber;
-        const newSelectionStartColumn = direction == 1 ? currentSelection.endColumn : currentSelection.startColumn;
+        const newSelectionStartLine = direction === 1 ? currentSelection.endLineNumber : currentSelection.startLineNumber;
+        const newSelectionStartColumn = direction === 1 ? currentSelection.endColumn : currentSelection.startColumn;
 
         const editor = this.editorAgent.getActiveEditor()!;
         editor.getControl().setSelection({

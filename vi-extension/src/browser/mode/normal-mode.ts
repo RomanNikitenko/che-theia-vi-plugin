@@ -1,14 +1,12 @@
-/*
- * Copyright (c) 2012-2018 Red Hat, Inc.
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
- * which is available at http://www.eclipse.org/legal/epl-2.0.html
+/*********************************************************************
+ * Copyright (c) 2018 Red Hat, Inc.
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Red Hat, Inc. - initial API and implementation
- */
+ **********************************************************************/
 
 import { injectable, inject } from "inversify";
 import { CommandContribution, CommandRegistry } from "@theia/core/lib/common/command";
@@ -21,42 +19,42 @@ export namespace NormalModeCommands {
     export const CURSOR_RIGHT = {
         id: 'normal.mode.cursor.right',
         label: 'Move forward'
-    }
+    };
 
     export const CURSOR_LEFT = {
         id: 'normal.mode.cursor.left',
         label: 'Move backward'
-    }
+    };
 
     export const CURSOR_UP = {
         id: 'normal.mode.cursor.up',
         label: 'Move to the previous line'
-    }
+    };
 
     export const CURSOR_DOWN = {
         id: 'normal.mode.cursor.down',
         label: 'Move to the next line'
-    }
+    };
 
     export const CURSOR_HOME = {
         id: 'normal.mode.cursor.home',
         label: 'Move to the beginning of line'
-    }
+    };
 
     export const CURSOR_END = {
         id: 'normal.mode.cursor.end',
         label: 'Move to the end of line'
-    }
+    };
 
     export const CURSOR_WORD_END_RIGHT = {
         id: 'normal.mode.cursor.word.end.right',
         label: 'Move forward by one word unit'
-    }
+    };
 
     export const CURSOR_WORD_START_LEFT = {
         id: 'normal.mode.cursor.word.start.left',
         label: 'Move backward by one word unit'
-    }
+    };
 }
 
 @injectable()

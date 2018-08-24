@@ -72,7 +72,7 @@ Publish packages with lerna to update versions properly across local packages, [
 
     npx lerna publish
 
-### Insert commands
+### Insert Mode
 |Command | Desc |
 |--------|------|
 | `a` | Moves the cursor after the current character and enters insert mode |
@@ -82,7 +82,7 @@ Publish packages with lerna to update versions properly across local packages, [
 | `o` | Inserts a new line below the current line and enters insert mode on the new line |
 | `O` | Inserts a new line above the current one and enters insert mode on the new line |
 
-### Move command for Normal Mode
+### Normal Mode
 |Command | Desc |
 |--------|------|
 | `esc (ctrl-[)` | enter Normal Mode |
